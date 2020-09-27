@@ -47,7 +47,6 @@ class PortalFragment : Fragment() {
     }
 
     private fun portalItemClicked(portal : Portal) {
-        Toast.makeText(activity,getString(R.string.install_chrome),Toast.LENGTH_SHORT).show()
         val builder = CustomTabsIntent.Builder()
 
         // add share button to overflow menu
@@ -62,7 +61,7 @@ class PortalFragment : Fragment() {
 
         val requestCode = 100
         val intent = anotherCustomTab.intent
-        intent.setData(Uri.parse(portal.url))
+        intent.data = Uri.parse(portal.url)
 
         val pendingIntent = PendingIntent.getActivity(activity,
             requestCode,
@@ -84,7 +83,7 @@ class PortalFragment : Fragment() {
 
         if (packageName != null) {
             customTabsIntent.intent.setPackage(packageName)
-            customTabsIntent.launchUrl(activity, Uri.parse(portal.url))
+            activity?.let { customTabsIntent.launchUrl(it, Uri.parse(portal.url)) }
         } else {
             Toast.makeText(activity,getString(R.string.install_chrome),Toast.LENGTH_SHORT).show()
         }
