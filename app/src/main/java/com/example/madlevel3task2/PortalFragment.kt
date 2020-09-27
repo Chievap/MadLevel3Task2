@@ -1,17 +1,17 @@
 package com.example.madlevel3task2
 
+import android.app.PendingIntent
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_portal.*
 
 /**
@@ -19,8 +19,8 @@ import kotlinx.android.synthetic.main.fragment_portal.*
  */
 class PortalFragment : Fragment() {
     private val portals = arrayListOf<Portal>()
-    private val portalAdapter: PortalAdapter = PortalAdapter(portals)
-
+    private val portalAdapter: PortalAdapter = PortalAdapter(portals) { portal: Portal -> portalItemClicked(portal) }
+    private var customTabHelper: CustomTabHelper = CustomTabHelper()
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
@@ -46,5 +46,50 @@ class PortalFragment : Fragment() {
         portalAdapter.notifyDataSetChanged()}}
     }
 
+    private fun portalItemClicked(portal : Portal) {
+        Toast.makeText(activity,getString(R.string.install_chrome),Toast.LENGTH_SHORT).show()
+        val builder = CustomTabsIntent.Builder()
+
+        // add share button to overflow menu
+        builder.addDefaultShareMenuItem()
+        activity?.let { ContextCompat.getColor(it, R.color.colorPrimary) }?.let {
+            builder.setToolbarColor(
+                it
+            )
+        }
+
+        val anotherCustomTab = CustomTabsIntent.Builder().build()
+
+        val requestCode = 100
+        val intent = anotherCustomTab.intent
+        intent.setData(Uri.parse(portal.url))
+
+        val pendingIntent = PendingIntent.getActivity(activity,
+            requestCode,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT)
+
+        // add menu item to oveflow
+        builder.addMenuItem("Sample item", pendingIntent)
+        builder.setShowTitle(true)
+
+        // animation for enter and exit of tab
+        activity?.let { builder.setStartAnimations(it, android.R.anim.fade_in, android.R.anim.fade_out) }
+        activity?.let { builder.setExitAnimations(it, android.R.anim.fade_in, android.R.anim.fade_out) }
+
+        val customTabsIntent = builder.build()
+
+        // check is chrome available
+        val packageName = activity?.let { customTabHelper.getPackageNameToUse(it, portal.url) }
+
+        if (packageName != null) {
+            customTabsIntent.intent.setPackage(packageName)
+            customTabsIntent.launchUrl(activity, Uri.parse(portal.url))
+        } else {
+            Toast.makeText(activity,getString(R.string.install_chrome),Toast.LENGTH_SHORT).show()
+        }
+
+
+    }
 
 }
