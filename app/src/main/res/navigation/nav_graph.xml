@@ -3,26 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
-
+    app:startDestination="@id/portalFragment">
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.example.madlevel3task2.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
-
+        android:id="@+id/portalFragment"
+        android:name="com.example.madlevel3task2.PortalFragment"
+        android:label="fragment_portal"
+        tools:layout="@layout/fragment_portal" >
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_portalFragment_to_addPortalFragment"
+            app:destination="@id/addPortalFragment" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.madlevel3task2.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
-
+        android:id="@+id/addPortalFragment"
+        android:name="com.example.madlevel3task2.AddPortalFragment"
+        android:label="fragment_add_portal"
+        tools:layout="@layout/fragment_add_portal" >
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_addPortalFragment_to_portalFragment"
+            app:destination="@id/portalFragment" />
     </fragment>
 </navigation>
