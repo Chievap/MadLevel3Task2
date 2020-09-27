@@ -12,4 +12,5 @@
     <string name="hint_title">Title</string>
     <string name="hint_url">Url</string>
     <string name="add_portal">Add portal</string>
+    <string name="not_valid">Not a valid portal, please fill in all information prompted</string>
 </resources>
